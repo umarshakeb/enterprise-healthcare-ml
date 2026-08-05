@@ -9,8 +9,8 @@ stages:
       size: 4433066
     - path: src
       hash: md5
-      md5: 752e575852cef7eded046312762f3237.dir
-      size: 38870
+      md5: d895b6a92f6107a9f57b01cab932c050.dir
+      size: 38833
       nfiles: 10
     outs:
     - path: models/risk_model_complete_pipeline.joblib
@@ -21,3 +21,24 @@ stages:
       hash: md5
       md5: 3bb430a7afaf3d3c857d826035115f92
       size: 1093
+  train_claim:
+    cmd: python -m src.training_pipeline --model claim
+    deps:
+    - path: outputs/feature_schema.json
+      hash: md5
+      md5: 3bb430a7afaf3d3c857d826035115f92
+      size: 1093
+    - path: outputs/model_table_enriched.csv
+      hash: md5
+      md5: 16c67b96ee4b0be3ceae39b5d49ee8b2
+      size: 4433066
+    - path: src
+      hash: md5
+      md5: d895b6a92f6107a9f57b01cab932c050.dir
+      size: 38833
+      nfiles: 10
+    outs:
+    - path: models/claim_model_complete_pipeline.joblib
+      hash: md5
+      md5: 8aa8932d6a5bef7064e9ef1389621ae8
+      size: 5243059
