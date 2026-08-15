@@ -34,7 +34,7 @@ def get_preprocessor(config):
 
 # Function to build complete sklearn pipeline
 def build_model_pipeline(config):
-    preprocessor = get_preprocessor()
+    preprocessor = get_preprocessor(config)
     model = RandomForestClassifier(
         n_estimators=config['params']['n_estimators'],
         max_depth = config['params']['max_depth'],

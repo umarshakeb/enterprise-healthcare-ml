@@ -192,4 +192,14 @@ cython_debug/
 
 mlflow.db
 mlruns/
-/models
+
+# Ignore compiled ML models
+models/*.joblib
+
+# Ignore local MLflow / Tracking runs
+mlartifacts/
+mlruns/
+
+# Ignore local DVC cache (remote storage will handle this)
+dvc-storage/
+.dvc/cache/

@@ -98,7 +98,6 @@ MODEL_CONFIG ={
             "age",
             "chronic_flag",
             "length_of_stay_hours",
-            "doctor_id",
             "billed_amount",
             "days_since_registration",
             "visit_frequency",

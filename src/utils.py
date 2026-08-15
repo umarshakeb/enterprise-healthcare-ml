@@ -55,7 +55,7 @@ def save_feature_schema_full(config):
     }
 
     with open(schema_path, "w", encoding="utf-8") as f:
-        json.dumps(schema,f, indent=4)
+        json.dump(schema,f, indent=4)
     
     return schema_path
 

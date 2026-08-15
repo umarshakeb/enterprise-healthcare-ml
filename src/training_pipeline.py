@@ -14,10 +14,11 @@ from src.utils import (
 )
 from src.evaluate import evaluate_model,is_eligible_for_production
 from src.train import build_model_pipeline, get_input_feature_columns
+from src.generate_feature_baseline import generate_feature_baseline
 
 # Maine function to orchestrate complete training pipeline
-mlflow.set_tracking_uri('https://127.0.0.1:5000')
-mlflow.set_registry_uri('https://127.0.0.1:5000')
+mlflow.set_tracking_uri('http://127.0.0.1:5000')
+mlflow.set_registry_uri('http://127.0.0.1:5000')
 mlflow.set_experiment('healthcare-classification')
 
 def run_pipeline(model_type):
@@ -53,6 +54,14 @@ def run_pipeline(model_type):
     print(f"X_train shape: {X_train.shape}")
     print(f"X_test shape : {X_test.shape}")
 
+    # Generate feature baseline for drift monitoring
+    baseline_path = generate_feature_baseline(
+        X_train= X_train,
+        numeric_features= config['numeric_features'],
+        n_bins= 10
+    )
+    print("Feature baseline saved at:", baseline_path)
+    
     # Build preprocessing and model pipeline
     pipeline = build_model_pipeline(config)
     print("Preprocessing + model pipeline ready ✓")
@@ -85,7 +94,7 @@ def run_pipeline(model_type):
     print(f"Target Recall : {metrics['target_recall']:.4f}")
 
     with mlflow.start_run(run_name=config['run_name']) as run:
-        mlflow.log_param(config['params'])
+        mlflow.log_params(config['params'])
         mlflow.log_param('target_column',config['target_column'])
         mlflow.log_param('sort_column', config['sort_column'])
         mlflow.log_param('input_feature_count', len(input_feature_columns))
@@ -98,7 +107,8 @@ def run_pipeline(model_type):
 
         model_info = mlflow.sklearn.log_model(
             sk_model=pipeline,
-            name="model"
+            name="model",
+            skops_trusted_types=["numpy.dtype"]
         )
 
         run_id = run.info.run_id
