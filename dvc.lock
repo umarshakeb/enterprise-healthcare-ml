@@ -9,9 +9,9 @@ stages:
       size: 4433066
     - path: src
       hash: md5
-      md5: d895b6a92f6107a9f57b01cab932c050.dir
-      size: 38833
-      nfiles: 10
+      md5: 567999321346c43315a12597f13f2a63.dir
+      size: 44656
+      nfiles: 12
     outs:
     - path: models/risk_model_complete_pipeline.joblib
       hash: md5
@@ -34,9 +34,9 @@ stages:
       size: 4433066
     - path: src
       hash: md5
-      md5: d895b6a92f6107a9f57b01cab932c050.dir
-      size: 38833
-      nfiles: 10
+      md5: 567999321346c43315a12597f13f2a63.dir
+      size: 44656
+      nfiles: 12
     outs:
     - path: models/claim_model_complete_pipeline.joblib
       hash: md5
