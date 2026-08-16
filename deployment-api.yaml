@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: healthcare-api-deployment
+  labels:
+    app: healthcare-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: healthcare-api
+  template:
+    metadata:
+      labels:
+        app: healthcare-api
+    spec:
+      containers:
+        - name: api-container
+          image: healthcare-api:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8000
+          
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+
+          env:
+            - name: PYTHONUSERBASE
+              value: /tmp/.local
+            - name: MPLCONFIGDIR
+              value: /tmp/.matplotlib
+            - name: NUMBA_CACHE_DIR
+              value: /tmp/.numba
+
+          securityContext:
+            readOnlyRootFilesystem: true  
+            allowPrivilegeEscalation: false 
+            runAsNonRoot: true              
+            runAsUser: 10001                
+            capabilities:
+              drop:
+                - ALL                       
+
+          # FIXED: Maps a secure, writable in-memory segment to the logs folder
+          volumeMounts:
+            - mountPath: /tmp
+              name: tmp-volume
+            - mountPath: /app/logs
+              name: log-volume
+      volumes:
+        - name: tmp-volume
+          emptyDir: {}
+        - name: log-volume
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: healthcare-api-service
+spec:
+  type: NodePort
+  selector:
+    app: healthcare-api
+  ports:
+    - port: 8000
+      targetPort: 8000
+      nodePort: 30080

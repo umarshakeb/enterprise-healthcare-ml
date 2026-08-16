@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: healthcare-gradio-deployment
+  labels:
+    app: healthcare-gradio
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: healthcare-gradio
+  template:
+    metadata:
+      labels:
+        app: healthcare-gradio
+    spec:
+      containers:
+        - name: gradio-container
+          image: healthcare-gradio:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 7860
+          
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+
+          securityContext:
+            readOnlyRootFilesystem: false # Gradio needs write access to render its block UI layout
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 10001
+            capabilities:
+              drop:
+                - ALL
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: healthcare-gradio-service
+spec:
+  type: NodePort
+  selector:
+    app: healthcare-gradio
+  ports:
+    - port: 7860
+      targetPort: 7860
+      nodePort: 30180
