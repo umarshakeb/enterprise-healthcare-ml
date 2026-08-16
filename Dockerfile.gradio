@@ -11,5 +11,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY ui ./ui
 
 EXPOSE 7860
+# Create a dedicated system execution user account
+RUN useradd -u 10001 -m uiuser && \
+    chown -R 10001:10001 /app
+
+# Explicitly swap the container runtime user from root to non-root
+USER 10001
 
 CMD ["python", "ui/gradio_app.py"]
