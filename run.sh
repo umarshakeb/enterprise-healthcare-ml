@@ -3,9 +3,9 @@ set -e
 
 # Force DVC to download your real .joblib weights from S3 before booting the code
 echo "📦 Securely downloading machine learning model artifacts via DVC..."
-dvc pull -v
+dvc pull -v || echo "⚠️  dvc pull failed (no git repo in image) — continuing with whatever artifacts are already in the image."
 
-# FIXED: Swapped host flag from 127.0.0.1 to 0.0.0.0 so the frontend can cross the container gateway
+# Swapped host flag from 127.0.0.1 to 0.0.0.0 so the frontend can cross the container gateway
 echo "🔌 Booting up Backend FastAPI Engine on all network interfaces..."
 python -m uvicorn api.main:app --host 0.0.0.0 --port 8000 &
 
