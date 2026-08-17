@@ -20,6 +20,10 @@ spec:
           imagePullPolicy: Never
           ports:
             - containerPort: 7860
+
+          env:
+            - name: FASTAPI_BASE_URL
+              value: "http://healthcare-api-service:8000"
           
           resources:
             limits:
